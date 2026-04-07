@@ -1,0 +1,25 @@
+services:
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - VITE_PROXY_TARGET=http://backend-node:3001
+    depends_on:
+      - backend-node
+
+  backend-node:
+    build: ./backend-node
+    ports:
+      - "3001:3001"
+    environment:
+      - PYTHON_BACKEND_URL=http://backend-python:8000
+    depends_on:
+      - backend-python
+
+  backend-python:
+    build: ./backend-python
+    ports:
+      - "8000:8000"
+    environment:
+      - JSONPLACEHOLDER_URL=https://jsonplaceholder.typicode.com
