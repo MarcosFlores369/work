@@ -37,7 +37,7 @@ Frontend (React) --> Backend Python (FastAPI)
 
 1. El usuario presiona un boton en el frontend para grabar audio desde el microfono.
 2. Al detener la grabacion, el audio se envia al backend como archivo (formato `webm` o `wav`).
-3. El backend transcribe el audio a texto usando **Whisper** (modelo local o API).
+3. El backend transcribe el audio a texto usando **Whisper** a traves de la API de **Fal.ai**.
 4. El texto se envia a **Gemini** como prompt del agente, quien determina la tarea a realizar y genera una respuesta en texto.
 5. La respuesta en texto se convierte a audio usando **Microsoft Azure TTS**.
 6. El backend retorna al frontend: el texto transcrito, la respuesta del agente en texto y el audio de respuesta.
@@ -50,7 +50,7 @@ Frontend (React) --> Backend Python (FastAPI)
 ### Backend Python (FastAPI)
 
 - [ ] Endpoint `POST /api/chat` que reciba un archivo de audio (`multipart/form-data`).
-- [ ] Integracion con **Whisper** para transcripcion de audio a texto (puede usarse `openai-whisper` local o la API de OpenAI).
+- [ ] Integracion con **Whisper** via **Fal.ai** (`fal-client`) para transcripcion de audio a texto.
 - [ ] Integracion con **Google Gemini** (`google-generativeai`) para procesar el texto y generar respuestas.
 - [ ] Implementar un system prompt que instruya al agente sobre las 3 tareas disponibles.
 - [ ] Mantener un historial de conversacion por sesion para dar contexto al agente.
@@ -71,7 +71,7 @@ Frontend (React) --> Backend Python (FastAPI)
 ### Docker
 
 - [ ] `Dockerfile` para el frontend (Node 20 Alpine, build multi-stage para produccion).
-- [ ] `Dockerfile` para el backend (Python 3.11, con las dependencias necesarias para Whisper).
+- [ ] `Dockerfile` para el backend (Python 3.11).
 - [ ] `docker-compose.yml` que levante ambos servicios con las variables de entorno necesarias.
 
 ---
@@ -83,7 +83,7 @@ Frontend (React) --> Backend Python (FastAPI)
 | `GEMINI_API_KEY` | Backend | API key de Google Gemini |
 | `AZURE_SPEECH_KEY` | Backend | API key de Azure Cognitive Services Speech |
 | `AZURE_SPEECH_REGION` | Backend | Region del servicio Azure Speech (ej: `eastus`) |
-| `OPENAI_API_KEY` | Backend | *(Opcional)* Solo si se usa la API de OpenAI para Whisper en vez del modelo local |
+| `FAL_KEY` | Backend | API key de Fal.ai para Whisper |
 
 ---
 
@@ -155,6 +155,5 @@ basic_jarvis/
 ## Notas
 
 - Las API keys no deben estar hardcodeadas en el codigo. Usar variables de entorno y un archivo `.env` (no commiteado).
-- Se recomienda usar el modelo `base` o `small` de Whisper para mantener tiempos de respuesta rapidos.
-- El candidato puede elegir entre usar Whisper localmente (`openai-whisper`) o a traves de la API de OpenAI. Documentar la decision en el codigo.
+- Para Whisper se debe usar la API de Fal.ai (`fal-client`). Consultar la documentacion de Fal.ai para el endpoint de Whisper disponible.
 - El agente debe responder en el mismo idioma en que el usuario habla (si el usuario habla en espanol, responder en espanol).
