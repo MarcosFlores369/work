@@ -57,7 +57,7 @@ async def get_agent_response(user_text: str) -> str:
     )
 
     response = client.models.generate_content(
-        model="gemini-2.0-flash",
+        model="gemini-2.5-flash",
         contents=conversation_history,
         config=types.GenerateContentConfig(
             system_instruction=SYSTEM_PROMPT,
@@ -84,7 +84,7 @@ async def get_agent_response(user_text: str) -> str:
             )
 
             response = client.models.generate_content(
-                model="gemini-1.5-flash",
+                model="gemini-2.5-flash",
                 contents=conversation_history,
                 config=types.GenerateContentConfig(
                     system_instruction=SYSTEM_PROMPT,
